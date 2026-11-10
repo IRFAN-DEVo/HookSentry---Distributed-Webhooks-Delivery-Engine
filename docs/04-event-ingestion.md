@@ -58,3 +58,4 @@ flowchart LR
 
 ### Crash Recovery in Outbox Publishing:
 If the publisher process crashes after enqueuing the Celery task but before updating `published_at`, the task will be re-published upon recovery. Because delivery workers use atomic conditional claims (`status=PENDING -> PROCESSING`), duplicate tasks in Redis are safely absorbed without duplicate HTTP dispatches.
+

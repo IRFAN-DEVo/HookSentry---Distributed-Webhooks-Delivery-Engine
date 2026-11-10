@@ -50,3 +50,4 @@ HookSentry solves these architectural challenges by providing a hardened, observ
 - **Charts**: Recharts
 - **Icons**: Lucide React
 - **HTTP Client**: Axios with centralized refresh interceptor
+

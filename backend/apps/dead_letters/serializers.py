@@ -12,3 +12,4 @@ class DeadLetterSerializer(serializers.ModelSerializer):
             'dead_lettered_at', 'resolved_at', 'resolution_status'
         ]
         read_only_fields = fields
+

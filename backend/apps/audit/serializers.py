@@ -9,3 +9,4 @@ class AuditLogSerializer(serializers.ModelSerializer):
         model = AuditLog
         fields = ['id', 'workspace', 'actor', 'action', 'details', 'ip_address', 'created_at']
         read_only_fields = ['id', 'workspace', 'actor', 'action', 'details', 'ip_address', 'created_at']
+

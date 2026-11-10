@@ -11,3 +11,4 @@ class DeliveryAttemptSerializer(serializers.ModelSerializer):
             'started_at', 'completed_at', 'result'
         ]
         read_only_fields = fields
+

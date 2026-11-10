@@ -203,3 +203,4 @@ def execute_delivery(delivery_id) -> Dict[str, Any]:
         )
         logger.warning(f"Delivery {delivery.id} dead-lettered after {attempt_number} attempts. Reason: {error_message}")
         return {'status': 'dead_lettered', 'delivery_id': str(delivery.id), 'reason': error_message}
+

@@ -101,3 +101,4 @@ export default function RotateSecretModal({ isOpen, onClose, endpoint }) {
     </Modal>
   );
 }
+

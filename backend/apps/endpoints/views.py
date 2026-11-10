@@ -88,3 +88,4 @@ class EndpointViewSet(WorkspaceScopedQuerySetMixin, viewsets.ModelViewSet):
             'pending_count': pending,
             'success_rate': round((success / total * 100.0), 1) if total > 0 else 100.0,
         })
+

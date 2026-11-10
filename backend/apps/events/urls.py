@@ -8,3 +8,4 @@ router.register(r'events', WebhookEventViewSet, basename='event')
 urlpatterns = [
     path('', include(router.urls)),
 ]
+

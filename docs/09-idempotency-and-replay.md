@@ -28,3 +28,4 @@ When a developer replays an event from the DLQ:
 2. **Preserved History**: All prior `DeliveryAttempt` rows remain stored in PostgreSQL for debugging.
 3. **New Attempt Record**: The replayed execution produces a new attempt record (e.g. Attempt #6).
 4. **Audit Trail**: Every manual replay logs a `DELIVERY_REPLAYED` action in `AuditLog` capturing the user ID, previous status, and timestamp.
+

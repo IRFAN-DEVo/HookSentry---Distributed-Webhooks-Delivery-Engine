@@ -49,3 +49,4 @@ class TestTransactionalOutbox:
         # Subsequent run finds 0 pending
         second_run = publish_pending_outbox_events()
         assert second_run == 0
+

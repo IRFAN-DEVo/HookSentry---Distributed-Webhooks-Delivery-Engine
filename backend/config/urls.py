@@ -6,8 +6,10 @@ from apps.deliveries.dashboard import (
     DashboardDeliveryStatsView,
     DashboardRecentDeliveriesView,
 )
+from common.views import HealthCheckView
 
 api_v1_patterns = [
+    path('health/', HealthCheckView.as_view(), name='api-health'),
     path('auth/', include('apps.accounts.urls')),
     path('', include('apps.workspaces.urls')),
     path('', include('apps.endpoints.urls')),
@@ -22,6 +24,7 @@ api_v1_patterns = [
 ]
 
 urlpatterns = [
+    path('health/', HealthCheckView.as_view(), name='root-health'),
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_v1_patterns)),
     # OpenAPI Schema & Docs
@@ -29,3 +32,4 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
+

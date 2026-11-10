@@ -98,3 +98,4 @@ class TestAuthAndWorkspaces:
         # Access audit logs with API Key
         audit_resp = api_client.get('/api/v1/audit-logs/')
         assert audit_resp.status_code == 200
+

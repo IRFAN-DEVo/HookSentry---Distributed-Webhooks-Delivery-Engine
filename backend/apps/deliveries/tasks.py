@@ -40,3 +40,4 @@ def recover_stale_leases():
             d.save(update_fields=['status', 'next_retry_at', 'updated_at'])
             deliver_webhook.delay(str(d.id))
     return {'recovered_count': count}
+

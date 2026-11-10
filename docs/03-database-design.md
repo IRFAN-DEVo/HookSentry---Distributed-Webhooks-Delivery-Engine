@@ -139,3 +139,4 @@ Prevents duplicate event ingestion across clients and network retries.
 - `request_hash` (CharField 64, SHA-256 of payload string)
 - `response_reference` (JSONField)
 - **Constraint**: `unique_together = ('workspace', 'idempotency_key')`
+

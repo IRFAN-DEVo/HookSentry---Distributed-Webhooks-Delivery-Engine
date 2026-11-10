@@ -30,3 +30,4 @@ Upstream automated systems interact with HookSentry using workspace-scoped API k
 - **Storage**: Only the SHA-256 hash is persisted in `APIKey.key_hash`.
 - **Authentication**: Sent in `Authorization: Bearer hk_live_...` or `X-API-Key: hk_live_...`.
 - **Resolution**: `APIKeyAuthentication` validates the active state, updates `last_used_at`, and attaches the scoped workspace directly to `request.workspace`.
+

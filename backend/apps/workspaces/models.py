@@ -85,3 +85,4 @@ class APIKey(models.Model):
             return False
         computed_hash = hashlib.sha256(raw_key.encode('utf-8')).hexdigest()
         return secrets.compare_digest(self.key_hash, computed_hash)
+

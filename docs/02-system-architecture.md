@@ -92,3 +92,4 @@ sequenceDiagram
 - **At-Least-Once Delivery**: Messages are never lost when a worker crashes because the uncompleted delivery lease will expire, and the recovery heartbeat will re-enqueue it.
 - **No In-Transaction External I/O**: External HTTP requests to destination endpoints are never executed inside database transactions, completely preventing database connection starvation.
 - **Idempotent Ingestion**: Replays with identical idempotency keys return HTTP 200 with the previously generated event reference without duplicate delivery side effects.
+

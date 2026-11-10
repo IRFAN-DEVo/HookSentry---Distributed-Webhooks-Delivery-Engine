@@ -186,3 +186,4 @@ export default function IngestEventModal({ isOpen, onClose }) {
     </Modal>
   );
 }
+

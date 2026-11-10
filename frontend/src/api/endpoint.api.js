@@ -30,3 +30,4 @@ export const endpointApi = {
     return data;
   },
 };
+

@@ -8,3 +8,4 @@ router.register(r'endpoints', EndpointViewSet, basename='endpoint')
 urlpatterns = [
     path('', include(router.urls)),
 ]
+

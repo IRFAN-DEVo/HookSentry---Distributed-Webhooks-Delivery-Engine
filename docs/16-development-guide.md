@@ -68,3 +68,4 @@ npm run dev
 npm run build
 ```
 Dashboard will be available at [http://localhost:5173](http://localhost:5173).
+

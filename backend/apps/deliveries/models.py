@@ -41,3 +41,4 @@ class Delivery(models.Model):
 
     def __str__(self):
         return f"Delivery {self.id} [{self.status}] -> {self.endpoint.name}"
+

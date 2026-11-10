@@ -197,3 +197,4 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Demo data seeded successfully!"))
         self.stdout.write(f"Default login: admin@hooksentry.dev / AdminPass123!")
+

@@ -7,3 +7,4 @@ class AuditLogListView(WorkspaceScopedQuerySetMixin, generics.ListAPIView):
     serializer_class = AuditLogSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = AuditLog.objects.all().select_related('actor')
+

@@ -136,3 +136,4 @@ class DashboardRecentDeliveriesView(WorkspaceScopedQuerySetMixin, APIView):
         ).select_related('event', 'endpoint').order_by('-created_at')[:10]
         serializer = DeliverySerializer(recent, many=True)
         return Response(serializer.data)
+

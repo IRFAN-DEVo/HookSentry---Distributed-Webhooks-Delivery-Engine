@@ -18,3 +18,4 @@ export const eventApi = {
     return data;
   },
 };
+

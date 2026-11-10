@@ -22,3 +22,4 @@ urlpatterns = [
     path('workspaces/<uuid:workspace_id>/members/<uuid:pk>/', member_detail, name='workspace-members-detail'),
     path('', include(router.urls)),
 ]
+

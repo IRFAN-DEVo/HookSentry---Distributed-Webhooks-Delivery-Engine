@@ -103,3 +103,4 @@ class WorkspaceScopedQuerySetMixin:
             return qs.filter(**filter_kwargs)
         # If no workspace found for user, return empty queryset
         return qs.none()
+

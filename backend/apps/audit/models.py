@@ -42,3 +42,4 @@ class AuditLog(models.Model):
             details=details or {},
             ip_address=ip_address
         )
+

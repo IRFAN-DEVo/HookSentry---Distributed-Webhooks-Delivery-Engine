@@ -52,3 +52,4 @@ with transaction.atomic():
     delivery.save()
 ```
 If a worker crashes halfway through dispatching an external request, no lock is permanently held. After 60 seconds, `processing_lease_expires_at` lapses, allowing `recover_stale_leases` or competing workers to reclaim the delivery.
+

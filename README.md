@@ -170,3 +170,4 @@ Detailed technical documentation is available in the [`docs/`](docs/) directory:
 
 ## 7. License
 This project is licensed under the MIT License.
+

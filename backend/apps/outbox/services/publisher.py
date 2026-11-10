@@ -41,3 +41,4 @@ def publish_pending_outbox_events(batch_size: int = 100) -> int:
     if published_count > 0:
         logger.info(f"Transactional Outbox published {published_count} events to message broker.")
     return published_count
+

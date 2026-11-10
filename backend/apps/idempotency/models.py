@@ -17,3 +17,4 @@ class IdempotencyRecord(models.Model):
 
     def __str__(self):
         return f"{self.workspace.name} - {self.idempotency_key}"
+

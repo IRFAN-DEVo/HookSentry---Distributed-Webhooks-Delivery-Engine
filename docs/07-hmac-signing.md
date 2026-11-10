@@ -106,3 +106,4 @@ function verifyHookSentry(rawBodyBuffer, headers, secret, toleranceSeconds = 300
 - **Encryption at Rest**: Endpoint secrets are generated using 192-bit entropy (`secrets.token_hex(24)`) and encrypted using Fernet symmetric encryption before being saved to PostgreSQL.
 - **Redaction**: Raw secrets are never returned in standard API list or retrieve calls (masked as `whsec_••••••••`). They are shown only once upon creation or rotation.
 - **Rotation**: Calling `POST /api/v1/endpoints/{id}/rotate-secret/` atomically rotates the secret, logs an audit entry, and returns the new raw secret for one-time capture.
+

@@ -8,3 +8,4 @@ router.register(r'deliveries', DeliveryViewSet, basename='delivery')
 urlpatterns = [
     path('', include(router.urls)),
 ]
+

@@ -58,3 +58,4 @@ class Endpoint(models.Model):
                 if event_type.startswith(f"{prefix}."):
                     return True
         return False
+

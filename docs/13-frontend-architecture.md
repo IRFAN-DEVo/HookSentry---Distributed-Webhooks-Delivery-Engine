@@ -39,3 +39,4 @@ Rather than hardcoding mock metrics, the dashboard polls real aggregated backend
 - Dashboard KPIs & activity table: Polled every 4–5 seconds.
 - Delivery Inspector: Polled every 3 seconds while open to stream live delivery attempts in progress.
 - Analytics charts: Polled every 10 seconds.
+

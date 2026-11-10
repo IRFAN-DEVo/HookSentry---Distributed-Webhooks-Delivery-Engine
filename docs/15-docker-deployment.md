@@ -53,3 +53,4 @@ The `api` container automatically executes:
 - **Django REST API**: [http://localhost:8000/api/v1/](http://localhost:8000/api/v1/)
 - **Swagger OpenAPI Documentation**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 - **Redoc Documentation**: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
+

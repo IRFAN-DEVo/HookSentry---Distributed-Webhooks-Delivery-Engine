@@ -82,3 +82,4 @@ class LogoutView(views.APIView):
     def post(self, request):
         # Stateles JWT logout acknowledgment
         return Response({'message': 'Logged out successfully.'}, status=status.HTTP_200_OK)
+

@@ -105,3 +105,4 @@ class APIKeyViewSet(viewsets.ModelViewSet):
             details={'api_key_id': str(instance.id), 'name': instance.name, 'prefix': instance.prefix}
         )
         instance.delete()
+

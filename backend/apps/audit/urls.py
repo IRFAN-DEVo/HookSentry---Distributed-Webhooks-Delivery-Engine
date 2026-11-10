@@ -4,3 +4,4 @@ from .views import AuditLogListView
 urlpatterns = [
     path('audit-logs/', AuditLogListView.as_view(), name='audit-logs-list'),
 ]
+

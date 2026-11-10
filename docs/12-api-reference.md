@@ -74,3 +74,4 @@ All REST endpoints reside under the `/api/v1/` prefix and return JSON with consi
 | `POST` | `/api/v1/api-keys/` | Generate API key; returns raw token once. |
 | `DELETE`| `/api/v1/api-keys/{id}/` | Revoke API key. |
 | `GET` | `/api/v1/audit-logs/` | Query workspace security audit logs. |
+

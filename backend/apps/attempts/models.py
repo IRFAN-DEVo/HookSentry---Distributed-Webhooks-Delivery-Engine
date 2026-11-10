@@ -30,3 +30,4 @@ class DeliveryAttempt(models.Model):
 
     def __str__(self):
         return f"Attempt #{self.attempt_number} for Delivery {self.delivery_id} [{self.result}]"
+

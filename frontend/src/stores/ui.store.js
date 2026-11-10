@@ -22,3 +22,4 @@ export const useUIStore = create((set) => ({
       sidebarCollapsed: !state.sidebarCollapsed,
     })),
 }));
+

@@ -42,3 +42,4 @@ class WebhookEventViewSet(WorkspaceScopedQuerySetMixin, viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_200_OK)
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+

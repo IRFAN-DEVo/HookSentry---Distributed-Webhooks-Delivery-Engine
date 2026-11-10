@@ -27,3 +27,4 @@ class DeadLetter(models.Model):
 
     def __str__(self):
         return f"DLQ {self.id} for Delivery {self.delivery_id} [{self.resolution_status}]"
+

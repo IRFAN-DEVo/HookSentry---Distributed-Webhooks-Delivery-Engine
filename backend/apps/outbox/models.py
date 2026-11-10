@@ -20,3 +20,4 @@ class OutboxEvent(models.Model):
     def __str__(self):
         status = "PUBLISHED" if self.published_at else "PENDING"
         return f"OutboxEvent {self.id} [{self.event_type}] ({status})"
+

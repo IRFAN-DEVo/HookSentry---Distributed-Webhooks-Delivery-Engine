@@ -15,3 +15,4 @@ class DeadLetterViewSet(WorkspaceScopedQuerySetMixin, viewsets.ReadOnlyModelView
         if status_filter:
             qs = qs.filter(resolution_status=status_filter.upper())
         return qs
+

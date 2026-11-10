@@ -21,3 +21,4 @@ pytest backend/tests
 | `test_event_ingestion_and_idempotency.py` | ACID transaction atomicity, fan-out subscription matching, outbox record generation, identical idempotency key replay (200 OK), payload tampering detection (409 Conflict). |
 | `test_delivery_engine_and_retries.py` | Delivery claiming with lease timestamp, concurrent claim mutual exclusion, worker crash recovery, retryable 5xx handling, exponential backoff, jitter, `Retry-After` parsing, non-retryable 4xx rejection, max attempts exhaustion to DLQ, and manual replay. |
 | `test_transactional_outbox.py` | Standalone outbox poller loop, `SELECT FOR UPDATE SKIP LOCKED` simulation, broker task dispatch, and idempotent publication stamping. |
+

@@ -34,3 +34,4 @@ class DeliverySerializer(serializers.ModelSerializer):
     def get_is_replayable(self, obj):
         # Allow replay for failed, dead_lettered, or success (if explicit re-test desired)
         return obj.status in (Delivery.Status.FAILED, Delivery.Status.DEAD_LETTERED, Delivery.Status.SUCCESS)
+

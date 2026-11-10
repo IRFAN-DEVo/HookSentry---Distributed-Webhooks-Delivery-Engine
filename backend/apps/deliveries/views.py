@@ -85,3 +85,4 @@ class DeliveryViewSet(WorkspaceScopedQuerySetMixin, viewsets.ReadOnlyModelViewSe
         attempts = delivery.attempts.all().order_by('attempt_number')
         serializer = DeliveryAttemptSerializer(attempts, many=True)
         return Response(serializer.data)
+

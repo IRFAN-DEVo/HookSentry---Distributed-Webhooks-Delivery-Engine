@@ -39,3 +39,4 @@ Attackers can attempt to bypass initial URL validation by returning an HTTP 301/
 - **Fernet Symmetric Encryption**: Endpoint secrets are encrypted at rest using a 256-bit AES key in CBC mode with HMAC-SHA256 authentication.
 - **Log Sanitization**: Delivery attempt headers are sanitized prior to saving in PostgreSQL. The cryptographic signature is masked (`sha256=a1b2••••••••`), and authorization tokens are stripped.
 - **Constant-Time Verification**: All signature and token comparisons employ `hmac.compare_digest()` or `secrets.compare_digest()` to defeat timing attacks.
+

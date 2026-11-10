@@ -59,3 +59,4 @@ class LoginSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+

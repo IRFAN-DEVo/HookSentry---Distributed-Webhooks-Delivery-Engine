@@ -152,3 +152,4 @@ class IngestEventSerializer(serializers.Serializer):
             publish_pending_outbox_events()
         except Exception:
             pass  # Standalone publisher daemon will catch it
+
