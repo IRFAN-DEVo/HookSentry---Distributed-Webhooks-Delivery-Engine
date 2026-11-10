@@ -1,0 +1,2097 @@
+openapi: 3.0.3
+info:
+  title: HookSentry — Distributed Webhook Delivery Engine API
+  version: 1.0.0
+  description: Enterprise-grade webhook distribution platform guaranteeing at-least-once
+    delivery semantics, cryptographic signing, transactional outbox publishing, automated
+    retries with jitter, and dead-letter queue management.
+paths:
+  /api/v1/api-keys/:
+    get:
+      operationId: v1_api_keys_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAPIKeyList'
+          description: ''
+    post:
+      operationId: v1_api_keys_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAPIKeyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAPIKeyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAPIKeyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAPIKey'
+          description: ''
+  /api/v1/api-keys/{id}/:
+    get:
+      operationId: v1_api_keys_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+          description: ''
+    put:
+      operationId: v1_api_keys_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/APIKeyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/APIKeyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/APIKeyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+          description: ''
+    patch:
+      operationId: v1_api_keys_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAPIKeyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAPIKeyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAPIKeyRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+          description: ''
+    delete:
+      operationId: v1_api_keys_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/audit-logs/:
+    get:
+      operationId: v1_audit_logs_list
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogList'
+          description: ''
+  /api/v1/auth/login/:
+    post:
+      operationId: v1_auth_login_create
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/logout/:
+    post:
+      operationId: v1_auth_logout_create
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/me/:
+    get:
+      operationId: v1_auth_me_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/register/:
+    post:
+      operationId: v1_auth_register_create
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: v1_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/dashboard/delivery-stats/:
+    get:
+      operationId: v1_dashboard_delivery_stats_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/dashboard/overview/:
+    get:
+      operationId: v1_dashboard_overview_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/dashboard/recent-deliveries/:
+    get:
+      operationId: v1_dashboard_recent_deliveries_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/dead-letters/:
+    get:
+      operationId: v1_dead_letters_list
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDeadLetterList'
+          description: ''
+  /api/v1/dead-letters/{id}/:
+    get:
+      operationId: v1_dead_letters_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this dead letter.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeadLetter'
+          description: ''
+  /api/v1/deliveries/:
+    get:
+      operationId: v1_deliveries_list
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDeliveryList'
+          description: ''
+  /api/v1/deliveries/{id}/:
+    get:
+      operationId: v1_deliveries_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this delivery.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/deliveries/{id}/attempts/:
+    get:
+      operationId: v1_deliveries_attempts_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this delivery.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/deliveries/{id}/replay/:
+    post:
+      operationId: v1_deliveries_replay_create
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this delivery.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/endpoints/:
+    get:
+      operationId: v1_endpoints_list
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEndpointList'
+          description: ''
+    post:
+      operationId: v1_endpoints_create
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEndpointRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateEndpointRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateEndpointRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateEndpoint'
+          description: ''
+  /api/v1/endpoints/{id}/:
+    get:
+      operationId: v1_endpoints_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+          description: ''
+    put:
+      operationId: v1_endpoints_update
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEndpointRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateEndpointRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateEndpointRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateEndpoint'
+          description: ''
+    patch:
+      operationId: v1_endpoints_partial_update
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateEndpointRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateEndpointRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateEndpointRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateEndpoint'
+          description: ''
+    delete:
+      operationId: v1_endpoints_destroy
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/endpoints/{id}/rotate-secret/:
+    post:
+      operationId: v1_endpoints_rotate_secret_create
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EndpointRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EndpointRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+          description: ''
+  /api/v1/endpoints/{id}/stats/:
+    get:
+      operationId: v1_endpoints_stats_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this endpoint.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+          description: ''
+  /api/v1/events/:
+    get:
+      operationId: v1_events_list
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWebhookEventList'
+          description: ''
+    post:
+      operationId: v1_events_create
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IngestEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngestEventRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestEvent'
+          description: ''
+  /api/v1/events/{id}/:
+    get:
+      operationId: v1_events_retrieve
+      description: |-
+        Mixin for ViewSets to automatically scope querysets to the active workspace.
+        Never trusts client-supplied workspace IDs without verifying membership.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this webhook event.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEvent'
+          description: ''
+  /api/v1/workspaces/:
+    get:
+      operationId: v1_workspaces_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkspaceList'
+          description: ''
+    post:
+      operationId: v1_workspaces_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+  /api/v1/workspaces/{id}/:
+    get:
+      operationId: v1_workspaces_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    put:
+      operationId: v1_workspaces_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    patch:
+      operationId: v1_workspaces_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+          description: ''
+    delete:
+      operationId: v1_workspaces_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/workspaces/{workspace_id}/members/:
+    get:
+      operationId: v1_workspaces_members_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWorkspaceMemberList'
+          description: ''
+    post:
+      operationId: v1_workspaces_members_create
+      parameters:
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMember'
+          description: ''
+  /api/v1/workspaces/{workspace_id}/members/{id}/:
+    get:
+      operationId: v1_workspaces_members_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMember'
+          description: ''
+    put:
+      operationId: v1_workspaces_members_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceMemberRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMember'
+          description: ''
+    patch:
+      operationId: v1_workspaces_members_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMember'
+          description: ''
+    delete:
+      operationId: v1_workspaces_members_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: workspace_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    APIKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        prefix:
+          type: string
+          readOnly: true
+        raw_key:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_used_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - id
+      - last_used_at
+      - name
+      - prefix
+      - raw_key
+      - workspace
+    APIKeyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        is_active:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - name
+    ActionEnum:
+      enum:
+      - WORKSPACE_CREATED
+      - WORKSPACE_UPDATED
+      - ENDPOINT_CREATED
+      - ENDPOINT_UPDATED
+      - ENDPOINT_DELETED
+      - SECRET_ROTATED
+      - DELIVERY_REPLAYED
+      - API_KEY_CREATED
+      - API_KEY_REVOKED
+      - MEMBER_ADDED
+      - MEMBER_ROLE_CHANGED
+      - MEMBER_REMOVED
+      type: string
+      description: |-
+        * `WORKSPACE_CREATED` - Workspace Created
+        * `WORKSPACE_UPDATED` - Workspace Updated
+        * `ENDPOINT_CREATED` - Endpoint Created
+        * `ENDPOINT_UPDATED` - Endpoint Updated
+        * `ENDPOINT_DELETED` - Endpoint Deleted
+        * `SECRET_ROTATED` - Secret Rotated
+        * `DELIVERY_REPLAYED` - Delivery Replayed
+        * `API_KEY_CREATED` - API Key Created
+        * `API_KEY_REVOKED` - API Key Revoked
+        * `MEMBER_ADDED` - Member Added
+        * `MEMBER_ROLE_CHANGED` - Member Role Changed
+        * `MEMBER_REMOVED` - Member Removed
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        actor:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        action:
+          allOf:
+          - $ref: '#/components/schemas/ActionEnum'
+          readOnly: true
+        details:
+          readOnly: true
+        ip_address:
+          type: string
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - action
+      - actor
+      - created_at
+      - details
+      - id
+      - ip_address
+      - workspace
+    CreateAPIKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        raw_key:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - name
+      - raw_key
+    CreateAPIKeyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - name
+    CreateEndpoint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+        raw_signing_secret:
+          type: string
+          readOnly: true
+      required:
+      - destination_url
+      - id
+      - name
+      - raw_signing_secret
+    CreateEndpointRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+      required:
+      - destination_url
+      - name
+    DeadLetter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        delivery:
+          allOf:
+          - $ref: '#/components/schemas/Delivery'
+          readOnly: true
+        failure_reason:
+          type: string
+          readOnly: true
+        total_attempts:
+          type: integer
+          readOnly: true
+        dead_lettered_at:
+          type: string
+          format: date-time
+          readOnly: true
+        resolved_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        resolution_status:
+          allOf:
+          - $ref: '#/components/schemas/ResolutionStatusEnum'
+          readOnly: true
+      required:
+      - dead_lettered_at
+      - delivery
+      - failure_reason
+      - id
+      - resolution_status
+      - resolved_at
+      - total_attempts
+    Delivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        event:
+          allOf:
+          - $ref: '#/components/schemas/DeliveryEventSummary'
+          readOnly: true
+        endpoint:
+          allOf:
+          - $ref: '#/components/schemas/DeliveryEndpoint'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        attempt_count:
+          type: integer
+          readOnly: true
+        max_attempts:
+          type: integer
+          readOnly: true
+        next_retry_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        processing_started_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        processing_lease_expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        last_error:
+          type: string
+          readOnly: true
+        last_response_status:
+          type: integer
+          readOnly: true
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_replayable:
+          type: string
+          readOnly: true
+      required:
+      - attempt_count
+      - created_at
+      - delivered_at
+      - endpoint
+      - event
+      - id
+      - is_replayable
+      - last_error
+      - last_response_status
+      - max_attempts
+      - next_retry_at
+      - processing_lease_expires_at
+      - processing_started_at
+      - status
+      - updated_at
+      - workspace
+    DeliveryEndpoint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          maxLength: 2048
+        is_active:
+          type: boolean
+      required:
+      - destination_url
+      - id
+      - name
+    DeliveryEndpointRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+        is_active:
+          type: boolean
+      required:
+      - destination_url
+      - name
+    DeliveryEventSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        event_type:
+          type: string
+          maxLength: 255
+        payload:
+          description: Immutable original event payload
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - event_type
+      - id
+      - payload
+    DeliveryEventSummaryRequest:
+      type: object
+      properties:
+        event_type:
+          type: string
+          minLength: 1
+          maxLength: 255
+        payload:
+          description: Immutable original event payload
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - event_type
+      - payload
+    Endpoint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        signing_secret_preview:
+          type: string
+          readOnly: true
+        delivery_count:
+          type: string
+          readOnly: true
+        success_rate:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - delivery_count
+      - destination_url
+      - id
+      - name
+      - signing_secret_preview
+      - success_rate
+      - updated_at
+      - workspace
+    EndpointRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+      required:
+      - destination_url
+      - name
+    IngestEvent:
+      type: object
+      properties:
+        event_type:
+          type: string
+          maxLength: 255
+        payload: {}
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - event_type
+      - payload
+    IngestEventRequest:
+      type: object
+      properties:
+        event_type:
+          type: string
+          minLength: 1
+          maxLength: 255
+        payload: {}
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - event_type
+      - payload
+    PaginatedAPIKeyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIKey'
+    PaginatedAuditLogList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+    PaginatedDeadLetterList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeadLetter'
+    PaginatedDeliveryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Delivery'
+    PaginatedEndpointList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+    PaginatedWebhookEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+    PaginatedWorkspaceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+    PaginatedWorkspaceMemberList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceMember'
+    PatchedAPIKeyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        is_active:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+    PatchedUpdateEndpointRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+    PatchedWorkspaceMemberRequest:
+      type: object
+      properties:
+        user_email:
+          type: string
+          format: email
+          writeOnly: true
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+    PatchedWorkspaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+    ResolutionStatusEnum:
+      enum:
+      - UNRESOLVED
+      - REPLAYED
+      - DISCARDED
+      type: string
+      description: |-
+        * `UNRESOLVED` - Unresolved
+        * `REPLAYED` - Replayed
+        * `DISCARDED` - Discarded
+    RoleEnum:
+      enum:
+      - OWNER
+      - ADMIN
+      - MEMBER
+      type: string
+      description: |-
+        * `OWNER` - Owner
+        * `ADMIN` - Admin
+        * `MEMBER` - Member
+    StatusEnum:
+      enum:
+      - PENDING
+      - PROCESSING
+      - RETRY_SCHEDULED
+      - SUCCESS
+      - FAILED
+      - DEAD_LETTERED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `PROCESSING` - Processing
+        * `RETRY_SCHEDULED` - Retry Scheduled
+        * `SUCCESS` - Success
+        * `FAILED` - Failed
+        * `DEAD_LETTERED` - Dead Lettered
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UpdateEndpoint:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+      required:
+      - destination_url
+      - name
+    UpdateEndpointRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        destination_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+        is_active:
+          type: boolean
+        event_types:
+          description: List of subscribed event types or ['*'] for all events.
+      required:
+      - destination_url
+      - name
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 255
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - email
+      - id
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 255
+      required:
+      - email
+    WebhookEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        event_type:
+          type: string
+          maxLength: 255
+        payload:
+          description: Immutable original event payload
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        delivery_count:
+          type: string
+          readOnly: true
+        success_count:
+          type: string
+          readOnly: true
+        pending_count:
+          type: string
+          readOnly: true
+        failed_count:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - delivery_count
+      - event_type
+      - failed_count
+      - id
+      - payload
+      - pending_count
+      - success_count
+      - workspace
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        current_user_role:
+          type: string
+          readOnly: true
+        member_count:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - current_user_role
+      - id
+      - member_count
+      - name
+      - slug
+      - updated_at
+    WorkspaceMember:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        joined_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - joined_at
+      - user
+      - workspace
+    WorkspaceMemberRequest:
+      type: object
+      properties:
+        user_email:
+          type: string
+          format: email
+          writeOnly: true
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+    WorkspaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - name
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
