@@ -55,3 +55,4 @@ class HealthCheckView(APIView):
 
         http_status = status.HTTP_200_OK if overall_healthy else status.HTTP_503_SERVICE_UNAVAILABLE
         return Response(data, status=http_status)
+
